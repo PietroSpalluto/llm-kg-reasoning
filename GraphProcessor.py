@@ -1,3 +1,6 @@
+import torch
+
+
 class GraphProcessor:
     def __init__(self, graph):
         self.graph = graph
@@ -6,8 +9,8 @@ class GraphProcessor:
     def get_graph(self):
         return self.graph
 
-    def get_nodes_features(self):
+    def get_nodes_features(self) -> torch.Tensor:
         return self.graph.data.x
 
-    def get_nodes_classes(self):
+    def get_nodes_classes(self) -> torch.Tensor:
         return self.graph.data.y

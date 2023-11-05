@@ -9,7 +9,7 @@ class GraphEncoder:
         self.graph_processor = graph_processor
         self.graph = self.graph_processor.get_graph()
 
-    def get_node(self, i):
+    def get_node(self, i: int) -> tuple:
         """
         Gets node information given the index of that node
         :param i: index of the node
@@ -21,14 +21,14 @@ class GraphEncoder:
 
         return node_name, node_features, node_class
 
-    def text_encode_node(self, i):
+    def text_encode_node(self, i: int) -> str:
         """
         Use an encoding function to encode node information into a text
         :param i: index of the node
         :return: text encoded node
         """
         node_name, _, node_class = self.get_node(i)
-        node_neighbors = self.sample_n_hops_neighbors(i, 2)
+        node_neighbors = self.sample_k_hops_neighbors(i, 2)
         text_encoded_node = ('node name: {}, node class: {}, node neighbors: {}'
                              .format(node_name,
                                      node_class,
@@ -36,11 +36,11 @@ class GraphEncoder:
 
         return text_encoded_node
 
-    def node_text_embedding(self, i):
+    def node_text_embedding(self, i: int) -> torch.Tensor:
         """
         Computes the text embedding of a given node
         :param i: index of the node
-        :return: embedding of the node in a single tensor of length N*M where N is the number of words
+        :return: embedding of the node in a 1-dimensional tensor of length N*M where N is the number of words
                  and M is the embedding size
         """
         text_encoded_node = self.text_encode_node(i)
@@ -50,7 +50,7 @@ class GraphEncoder:
 
         return torch.reshape(text_embedding, (-1,))
 
-    def node_features(self, i):
+    def node_features(self, i: int) -> torch.Tensor:
         """
         Gets the features of the node generated in the GraphProcessor
         :param i: index of the node
@@ -60,11 +60,12 @@ class GraphEncoder:
 
         return node_features
 
-    def sample_n_hops_neighbors(self, node, n):
+    def sample_k_hops_neighbors(self, node: int, k: int, n=30) -> torch.Tensor:
         """
-        Samples node in the n-hops neighborhood of a given node
+        Samples node in the k-hops neighborhood of a given node
         :param node: the index of the selected node
-        :param n: number of hops
+        :param k: number of hops
+        :param n: maximum number of nodes to sample
         :return: list containing neighbors with no repetitions
         """
         from torch_geometric.loader import NeighborLoader
@@ -75,7 +76,7 @@ class GraphEncoder:
 
         loader = NeighborLoader(
             self.graph.data,
-            num_neighbors=[30] * n,  # number of samples to select and number of hops
+            num_neighbors=[n] * k,  # number of samples to select and number of hops
             # Use a batch size of 128 for sampling training nodes
             batch_size=128,
             input_nodes=mask,

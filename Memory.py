@@ -42,7 +42,7 @@ class Memory:
 
             self.node_embedding.append(node_embedding)
 
-        # convert a list of tensor into a 2-dimensional tensor
+        # convert a list of tensors into a 2-dimensional tensor
         self.node_embedding = torch.stack(self.node_embedding)
 
     def pad_text_embedding(self):
@@ -55,7 +55,7 @@ class Memory:
             pad = ConstantPad1d((0, diff), 0)
             self.text_embedding[i] = pad(self.text_embedding[i])
 
-    def extract_top_k_similar_nodes(self, i, k):
+    def extract_top_k_similar_nodes(self, i: int, k: int) -> list:
         """
         Computes the cosine similarity between the selected node and all the other nodes in the graph
         and return the k more similar
