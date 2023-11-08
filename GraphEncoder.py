@@ -29,7 +29,7 @@ class GraphEncoder:
         """
         node_name, _, node_class = self.get_node(i)
         node_neighbors = self.sample_k_hops_neighbors(i, 2)
-        text_encoded_node = ('node name: {}, node class: {}, node neighbors: {}'
+        text_encoded_node = ("node name: {}, node class: {}, node neighbors: {}"
                              .format(node_name,
                                      node_class,
                                      node_neighbors.tolist()))
