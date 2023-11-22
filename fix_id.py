@@ -96,7 +96,8 @@ kg = kg.rename(columns={'node_index': 'y_node_index'})
 kg.to_csv("data/primekg.tab", index=False)
 
 # make a graph from the fixed KG
-graph_nx = nx.from_pandas_edgelist(kg, source='x_node_index',
+graph_nx = nx.from_pandas_edgelist(kg,
+                                   source='x_node_index',
                                    target='y_node_index',
                                    # we encode in the edge all the information about nodes and edge
                                    edge_attr=['x_name', 'x_type', 'relation', 'display_relation', 'y_type', 'y_name'],
